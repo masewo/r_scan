@@ -18,7 +18,7 @@ typedef void ScanResultCallback(String result);
 class RScanView extends StatefulWidget {
   final RScanController controller;
 
-  const RScanView({required this.controller}) : assert(controller != null);
+  const RScanView({required this.controller});
 
   @override
   State<StatefulWidget> createState() => _RScanViewState();
@@ -35,7 +35,7 @@ class _RScanViewState extends State<RScanView> {
   void initState() {
     super.initState();
     _controller = widget.controller;
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.top]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.top]);
   }
 
   @override
@@ -86,8 +86,7 @@ class RScanController extends ChangeNotifier {
   late MethodChannel _methodChannel;
 
   RScanController({this.isPlay: true})
-      : assert(isPlay != null),
-        super();
+      : super();
 
   void attach(int id) {
     _channel = EventChannel('${_scanType}_$id/event');
