@@ -43,16 +43,16 @@ class RScanCameraController extends ValueNotifier<RScanCameraValue> {
     _creatingCompleter = Completer<void>();
 
     try {
-      final Map<dynamic, dynamic> reply =
+      final Map<dynamic, dynamic>? reply =
           await (_channel.invokeMapMethod('initialize', <String, dynamic>{
         'cameraName': description.name,
         'resolutionPreset': _serializeResolutionPreset(resolutionPreset),
-      }) as FutureOr<Map<dynamic, dynamic>>);
-      _textureId = reply['textureId'];
+      }));
+      _textureId = reply?['textureId'];
       value = value.copyWith(
           isInitialized: true,
-          previewSize: Size(reply['previewWidth'].toDouble(),
-              reply['previewHeight'].toDouble()));
+          previewSize: Size(reply?['previewWidth'].toDouble(),
+              reply?['previewHeight'].toDouble()));
       _resultSubscription = EventChannel('${_scanType}_$_textureId/event')
           .receiveBroadcastStream()
           .listen(_handleResult);
