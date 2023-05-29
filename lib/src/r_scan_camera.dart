@@ -10,12 +10,11 @@ import 'package:r_scan/r_scan.dart';
 const _scanType = 'com.rhyme_lph/r_scan_camera';
 final MethodChannel _channel = const MethodChannel('$_scanType/method');
 
-Future<List<RScanCameraDescription>> availableRScanCameras() async {
+Future<List<RScanCameraDescription>?> availableRScanCameras() async {
   try {
-    final List<Map<dynamic, dynamic>> cameras = await (_channel
-            .invokeListMethod<Map<dynamic, dynamic>>('availableCameras')
-        as Future<List<Map<dynamic, dynamic>>>);
-    return cameras.map((Map<dynamic, dynamic> camera) {
+    final List<Map<dynamic, dynamic>>? cameras = await (_channel
+            .invokeListMethod<Map<dynamic, dynamic>>('availableCameras'));
+    return cameras?.map((Map<dynamic, dynamic> camera) {
       return RScanCameraDescription(
         name: camera['name'],
         lensDirection: _parseCameraLensDirection(camera['lensFacing']),
@@ -44,11 +43,11 @@ class RScanCameraController extends ValueNotifier<RScanCameraValue> {
     _creatingCompleter = Completer<void>();
 
     try {
-      final Map<dynamic, dynamic?> reply =
+      final Map<dynamic, dynamic> reply =
           await (_channel.invokeMapMethod('initialize', <String, dynamic>{
         'cameraName': description.name,
         'resolutionPreset': _serializeResolutionPreset(resolutionPreset),
-      }) as FutureOr<Map<dynamic, dynamic?>>);
+      }) as FutureOr<Map<dynamic, dynamic>>);
       _textureId = reply['textureId'];
       value = value.copyWith(
           isInitialized: true,
@@ -196,7 +195,7 @@ class RScanCameraDescription {
 
   @override
   int get hashCode {
-    return hashValues(name, lensDirection);
+    return Object.hash(name, lensDirection);
   }
 
   @override
@@ -260,7 +259,6 @@ String _serializeResolutionPreset(
     case RScanCameraResolutionPreset.low:
       return 'low';
   }
-  throw ArgumentError('Unknown ResolutionPreset value');
 }
 
 /// exception

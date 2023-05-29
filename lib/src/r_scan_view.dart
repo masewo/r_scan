@@ -24,7 +24,9 @@ class RScanView extends StatefulWidget {
   State<StatefulWidget> createState() => _RScanViewState();
 }
 
+// ignore: deprecated_member_use_from_same_package
 class _RScanViewState extends State<RScanView> {
+  // ignore: deprecated_member_use_from_same_package
   late RScanController _controller;
 
   void onPlatformViewCreated(int id) {
@@ -85,7 +87,7 @@ class RScanController extends ChangeNotifier {
   bool isPlay;
   late MethodChannel _methodChannel;
 
-  RScanController({this.isPlay: true})
+  RScanController({this.isPlay = true})
       : super();
 
   void attach(int id) {

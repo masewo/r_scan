@@ -8,6 +8,7 @@ class RScanDialog extends StatefulWidget {
 }
 
 class _RScanDialogState extends State<RScanDialog> {
+  // ignore: deprecated_member_use
   late RScanController _controller;
 
   @override
@@ -19,6 +20,7 @@ class _RScanDialogState extends State<RScanDialog> {
   bool isFirst = true;
 
   Future<void> initController() async {
+    // ignore: deprecated_member_use
     _controller = RScanController();
     _controller.addListener(() {
       final result = _controller.result;
@@ -42,6 +44,7 @@ class _RScanDialogState extends State<RScanDialog> {
             return Stack(
               children: <Widget>[
                 ScanImageView(
+                  // ignore: deprecated_member_use
                   child: RScanView(
                     controller: _controller,
                   ),

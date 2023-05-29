@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:typed_data';
 import 'package:flutter/services.dart';
 export 'package:r_scan/src/r_scan_view.dart';
 export 'package:r_scan/src/r_scan_camera.dart';
