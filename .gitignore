@@ -7,3 +7,5 @@
 build/
 .idea
 .fvm/flutter_sdk
+
+.cxx/

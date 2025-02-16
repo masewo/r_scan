@@ -7,61 +7,30 @@ import androidx.annotation.NonNull;
 
 import com.rhyme.r_scan.RScanCamera.RScanPermissions;
 
-import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
+import io.flutter.plugin.common.MethodCall;
+import io.flutter.plugin.common.MethodChannel;
+import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
+import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.platform.PlatformViewRegistry;
 import io.flutter.view.TextureRegistry;
 
-/**
- * RScanPlugin
- */
-//public class RScanPlugin implements MethodChannel.MethodCallHandler {
-//    private ImageScanHelper scanHelper;
-//
-//    private RScanPlugin(Registrar registrar) {
-//        scanHelper = new ImageScanHelper(registrar.context());
-//    }
-//
-//    public static void registerWith(Registrar registrar) {
-//        final MethodChannel channel = new MethodChannel(registrar.messenger(), "r_scan");
-//        channel.setMethodCallHandler(new RScanPlugin(registrar));
-//        RScanViewPlugin.registerWith(registrar);
-//    }
-//
-//    @Override
-//    public void onMethodCall(MethodCall call, Result result) {
-//        if (call.method.equals("scanImagePath")) {
-//            scanHelper.scanImagePath(call,result);
-//        } else if(call.method.equals("scanImageUrl")){
-//            scanHelper.scanImageUrl(call,result);
-//        } else if(call.method.equals("scanImageMemory")){
-//            scanHelper.scanImageMemory(call,result);
-//        } else {
-//            result.notImplemented();
-//        }
-//    }
-//}
-
-/**
- * RScanPlugin
- */
-public class RScanPlugin implements FlutterPlugin, ActivityAware {
+public class RScanPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware {
     private MethodCallHandlerImpl methodCallHandler;
     private FlutterPluginBinding flutterPluginBinding;
+    private MethodChannel channel;
 
-
-    public static void registerWith(Registrar registrar) {
-        RScanPlugin plugin = new RScanPlugin();
-        plugin.maybeStartListening(
-                registrar.activity(),
-                registrar.messenger(),
-                registrar::addRequestPermissionsResultListener,
-                registrar.view(), registrar.platformViewRegistry());
-
-    }
+//    public static void registerWith(Registrar registrar) {
+//        RScanPlugin plugin = new RScanPlugin();
+//        plugin.maybeStartListening(
+//                registrar.activity(),
+//                registrar.messenger(),
+//                registrar::addRequestPermissionsResultListener,
+//                registrar.view(), registrar.platformViewRegistry());
+//    }
 
     private void maybeStartListening(
             Activity activity,
@@ -74,20 +43,25 @@ public class RScanPlugin implements FlutterPlugin, ActivityAware {
     }
 
     @Override
-    public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
-        this.flutterPluginBinding = binding;
+    public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
+        this.flutterPluginBinding = flutterPluginBinding;
+        channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "r_scan");
+        channel.setMethodCallHandler(this);
+    }
 
+    @Override
+    public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
+        result.notImplemented();
     }
 
     @Override
     public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
         this.flutterPluginBinding = null;
-
+        channel.setMethodCallHandler(null);
     }
 
     @Override
     public void onAttachedToActivity(ActivityPluginBinding binding) {
-
         maybeStartListening(
                 binding.getActivity(),
                 flutterPluginBinding.getBinaryMessenger(),
@@ -99,13 +73,11 @@ public class RScanPlugin implements FlutterPlugin, ActivityAware {
     @Override
     public void onDetachedFromActivityForConfigChanges() {
         onDetachedFromActivity();
-
     }
 
     @Override
     public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
         onAttachedToActivity(binding);
-
     }
 
     @Override
